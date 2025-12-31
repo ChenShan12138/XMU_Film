@@ -1,0 +1,8 @@
+{
+  "name": "XMU_Film 智能影视拍摄平台",
+  "description": "A virtual production demo platform using multi-agent collaboration to turn ideas into filmed scripts and 3D scenes.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

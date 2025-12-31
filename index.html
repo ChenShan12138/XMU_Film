@@ -6,13 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XMU_Film 智能影视拍摄平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Shim process for browser environment to prevent Gemini SDK from crashing
+      window.process = {
+        env: {
+          API_KEY: "" // Will be injected by the environment
+        }
+      };
+    </script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
       body {
         font-family: 'Inter', sans-serif;
         background-color: #0a0a0a;
         color: #f0f0f0;
-        overflow: hidden; /* Prevent native scroll to control full-page transitions */
+        overflow: hidden;
       }
       .scrollbar-hide::-webkit-scrollbar {
         display: none;
@@ -28,6 +36,11 @@
         background: #333;
         border-radius: 10px;
       }
+      /* Prevent text selection during resizing */
+      .resizing {
+        user-select: none;
+        cursor: col-resize;
+      }
     </style>
 <script type="importmap">
 {
@@ -42,5 +55,6 @@
 </head>
 <body>
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>

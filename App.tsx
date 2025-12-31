@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { AppStep, ProjectData, ScriptLine, Actor, SetScene } from './types';
-import { generateScript } from './services/geminiService';
-import ShootingEditor from './components/ShootingEditor';
-import ExportView from './components/ExportView';
+import { AppStep, ProjectData, ScriptLine, Actor, SetScene } from './types.ts';
+import { generateScript } from './services/geminiService.ts';
+import ShootingEditor from './components/ShootingEditor.tsx';
+import ExportView from './components/ExportView.tsx';
 
 interface ExtendedActor extends Actor {
   age: string;

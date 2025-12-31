@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { ProjectData, ScriptLine } from '../types';
-import { generateImage } from '../services/geminiService';
+import { ProjectData, ScriptLine } from '../types.ts';
+import { generateImage } from '../services/geminiService.ts';
 
 interface ShootingEditorProps {
   project: ProjectData;
@@ -16,6 +16,7 @@ const ShootingEditor: React.FC<ShootingEditorProps> = ({ project, onUpdateProjec
   const [isGenerating, setIsGenerating] = useState<Record<string, boolean>>({});
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   const [drawerWidth, setDrawerWidth] = useState(320); // Default width in pixels
+  const [isDragging, setIsDragging] = useState(false);
   const isResizing = useRef(false);
 
   useEffect(() => {
@@ -49,16 +50,18 @@ const ShootingEditor: React.FC<ShootingEditorProps> = ({ project, onUpdateProjec
   // Handle Resizing
   const startResizing = (e: React.MouseEvent) => {
     isResizing.current = true;
+    setIsDragging(true);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', stopResizing);
-    document.body.style.cursor = 'col-resize';
+    document.body.classList.add('resizing');
   };
 
   const stopResizing = () => {
     isResizing.current = false;
+    setIsDragging(false);
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', stopResizing);
-    document.body.style.cursor = 'default';
+    document.body.classList.remove('resizing');
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -73,7 +76,7 @@ const ShootingEditor: React.FC<ShootingEditorProps> = ({ project, onUpdateProjec
   };
 
   return (
-    <div className="h-screen w-screen bg-[#0a0a0a] flex flex-col overflow-hidden text-zinc-300">
+    <div className={`h-screen w-screen bg-[#0a0a0a] flex flex-col overflow-hidden text-zinc-300 ${isDragging ? 'resizing' : ''}`}>
       {/* Top Header */}
       <div className="h-12 border-b border-white/5 flex items-center justify-between px-4 bg-zinc-950/80 backdrop-blur-md relative z-30">
         <div className="flex items-center space-x-4 flex-1">
@@ -141,9 +144,9 @@ const ShootingEditor: React.FC<ShootingEditorProps> = ({ project, onUpdateProjec
           {/* Resize Handle */}
           <div 
             onMouseDown={startResizing}
-            className="absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-500/50 transition-colors z-30 flex items-center justify-center"
+            className="absolute top-0 left-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500/50 active:bg-blue-600 transition-colors z-30 flex items-center justify-center group"
           >
-             <div className="w-px h-12 bg-white/10" />
+             <div className="w-px h-12 bg-white/10 group-hover:bg-white/30" />
           </div>
 
           <div className="h-full p-5 overflow-y-auto scrollbar-hide">

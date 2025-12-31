@@ -2,13 +2,21 @@
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
 import { ScriptLine } from "../types";
 
-// 防御性获取 API_KEY，防止脚本初始化崩溃
-const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+// 优先从 process.env 获取，其次从 window 对象获取
+const getApiKey = () => {
+  if (typeof process !== 'undefined' && process.env?.API_KEY) {
+    return process.env.API_KEY;
+  }
+  // @ts-ignore
+  return window.process?.env?.API_KEY || "";
+};
+
+const apiKey = getApiKey();
 const ai = new GoogleGenAI({ apiKey });
 
 export const generateScript = async (genre: string, idea: string): Promise<{ title: string; script: ScriptLine[] }> => {
   if (!apiKey) {
-    console.warn("API_KEY is missing. AI features will not work.");
+    console.error("Critical: API_KEY is missing.");
     return { title: '未配置 API KEY', script: [] };
   }
 
@@ -58,27 +66,31 @@ export const generateScript = async (genre: string, idea: string): Promise<{ tit
 export const generateImage = async (prompt: string): Promise<string> => {
   if (!apiKey) return 'https://picsum.photos/1280/720';
 
-  const response: GenerateContentResponse = await ai.models.generateContent({
-    model: 'gemini-2.5-flash-image',
-    contents: {
-      parts: [
-        { text: `Unity Built-in Render Pipeline 3D scene style, game engine look, simple clean textures, professional lighting, 3D character asset style: ${prompt}` },
-      ],
-    },
-    config: {
-      imageConfig: {
-        aspectRatio: "16:9"
-      }
-    },
-  });
+  try {
+    const response: GenerateContentResponse = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image',
+      contents: {
+        parts: [
+          { text: `Unity Built-in Render Pipeline 3D scene style, game engine look, simple clean textures, professional lighting, 3D character asset style: ${prompt}` },
+        ],
+      },
+      config: {
+        imageConfig: {
+          aspectRatio: "16:9"
+        }
+      },
+    });
 
-  const candidate = response.candidates?.[0];
-  if (candidate?.content?.parts) {
-    for (const part of candidate.content.parts) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
+    const candidate = response.candidates?.[0];
+    if (candidate?.content?.parts) {
+      for (const part of candidate.content.parts) {
+        if (part.inlineData) {
+          return `data:image/png;base64,${part.inlineData.data}`;
+        }
       }
     }
+  } catch (error) {
+    console.error("Image generation failed:", error);
   }
   
   return 'https://picsum.photos/1280/720';

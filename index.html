@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XMU_Film 智能影视拍摄平台</title>
     <script>
-      // 必须在所有脚本执行前注入 process 对象
-      window.process = window.process || { env: {} };
-      window.process.env = window.process.env || {};
-      // 这里的 API_KEY 会在构建或运行时被环境注入
-      window.process.env.API_KEY = window.process.env.API_KEY || "";
+      // 必须在入口脚本执行前定义 process.env
+      // 确保 Gemini SDK 能够顺利读取到 API_KEY
+      window.process = { 
+        env: { 
+          API_KEY: "" 
+        } 
+      };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -53,6 +55,6 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="module" src="index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

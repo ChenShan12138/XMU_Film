@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { ProjectData, ScriptLine } from '../types.ts';
-import { generateImage } from '../services/geminiService.ts';
+import { ProjectData, ScriptLine } from '../types';
+import { generateImage } from '../services/geminiService';
 
 interface ShootingEditorProps {
   project: ProjectData;

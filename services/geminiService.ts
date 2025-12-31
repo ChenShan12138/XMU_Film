@@ -2,9 +2,16 @@
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
 import { ScriptLine } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// 防御性获取 API_KEY，防止脚本初始化崩溃
+const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+const ai = new GoogleGenAI({ apiKey });
 
 export const generateScript = async (genre: string, idea: string): Promise<{ title: string; script: ScriptLine[] }> => {
+  if (!apiKey) {
+    console.warn("API_KEY is missing. AI features will not work.");
+    return { title: '未配置 API KEY', script: [] };
+  }
+
   const response: GenerateContentResponse = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: `根据题材 "${genre}" 和创意 "${idea}" 生成一个吸引人的项目标题和一段4行的短剧本（中文）。
@@ -49,6 +56,8 @@ export const generateScript = async (genre: string, idea: string): Promise<{ tit
 };
 
 export const generateImage = async (prompt: string): Promise<string> => {
+  if (!apiKey) return 'https://picsum.photos/1280/720';
+
   const response: GenerateContentResponse = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
     contents: {

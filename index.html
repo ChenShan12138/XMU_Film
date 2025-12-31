@@ -5,15 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XMU_Film 智能影视拍摄平台</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      // Shim process for browser environment to prevent Gemini SDK from crashing
-      window.process = {
-        env: {
-          API_KEY: "" // Will be injected by the environment
-        }
-      };
+      // 必须在所有脚本执行前注入 process 对象
+      window.process = window.process || { env: {} };
+      window.process.env = window.process.env || {};
+      // 这里的 API_KEY 会在构建或运行时被环境注入
+      window.process.env.API_KEY = window.process.env.API_KEY || "";
     </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
       body {
@@ -36,7 +35,6 @@
         background: #333;
         border-radius: 10px;
       }
-      /* Prevent text selection during resizing */
       .resizing {
         user-select: none;
         cursor: col-resize;
@@ -45,16 +43,16 @@
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
   }
 }
 </script>
 </head>
 <body>
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>

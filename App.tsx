@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { AppStep, ProjectData, ScriptLine, Actor, SetScene } from './types.ts';
-import { generateScript } from './services/geminiService.ts';
-import ShootingEditor from './components/ShootingEditor.tsx';
-import ExportView from './components/ExportView.tsx';
+import { AppStep, ProjectData, ScriptLine, Actor, SetScene } from './types';
+import { generateScript } from './services/geminiService';
+import ShootingEditor from './components/ShootingEditor';
+import ExportView from './components/ExportView';
 
 interface ExtendedActor extends Actor {
   age: string;
@@ -30,9 +30,9 @@ const ACTORS_POOL: ExtendedActor[] = [
 ];
 
 const SCENES = [
-  { name: '废弃实验室', desc: 'Unity Built-in - 赛博工业风', img: 'https://picsum.photos/seed/scene1/800/450' },
-  { name: '月面基地', desc: 'Unity 写实 - 环向无缝空间', img: 'https://picsum.photos/seed/scene2/800/450' },
-  { name: '霓虹街区', desc: 'Unity 实时光线追踪 - 极具张力', img: 'https://picsum.photos/seed/scene3/800/450' },
+  { id: 'sc1', name: '废弃实验室', description: 'Unity Built-in - 赛博工业风', imageUrl: 'https://picsum.photos/seed/scene1/800/450' },
+  { id: 'sc2', name: '月面基地', description: 'Unity 写实 - 环向无缝空间', imageUrl: 'https://picsum.photos/seed/scene2/800/450' },
+  { id: 'sc3', name: '霓虹街区', description: 'Unity 实时光线追踪 - 极具张力', imageUrl: 'https://picsum.photos/seed/scene3/800/450' },
 ];
 
 const App: React.FC = () => {
